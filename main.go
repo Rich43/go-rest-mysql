@@ -22,16 +22,16 @@ var DB *gorm.DB
 
 func getSingles(c *gin.Context) {
 	var singlesCollection []singles
-	DB.Create(&singlesCollection)
+	DB.Find(&singlesCollection)
 	c.JSON(http.StatusOK, singlesCollection)
 }
 
 func addSingle(c *gin.Context) {
-	var singlesCollection = []singles{
-		{Title: c.GetString("title"), Artist: c.GetString("artist"), Lyrics: c.GetString("lyrics")},
+	var single = singles{
+		Title: c.PostForm("title"), Artist: c.PostForm("artist"), Lyrics: c.PostForm("lyrics"),
 	}
-	DB.Create(&singlesCollection)
-	c.JSON(http.StatusOK, singlesCollection)
+	DB.Create(&single)
+	c.JSON(http.StatusOK, single)
 }
 
 func main() {
