@@ -21,9 +21,17 @@ type singles struct {
 var DB *gorm.DB
 
 func getSingles(c *gin.Context) {
-	var singles []singles
-	DB.Find(&singles)
-	c.JSON(http.StatusOK, singles)
+	var singlesCollection []singles
+	DB.Create(&singlesCollection)
+	c.JSON(http.StatusOK, singlesCollection)
+}
+
+func addSingle(c *gin.Context) {
+	var singlesCollection = []singles{
+		{Title: c.GetString("title"), Artist: c.GetString("artist"), Lyrics: c.GetString("lyrics")},
+	}
+	DB.Create(&singlesCollection)
+	c.JSON(http.StatusOK, singlesCollection)
 }
 
 func main() {
@@ -40,6 +48,7 @@ func main() {
 	context := gin.Context{}
 	context.Set("db", db)
 	router.GET("/api/singles", getSingles)
+	router.POST("/api/singles", addSingle)
 	routerErr := router.Run("localhost:8080")
 	if routerErr != nil {
 		panic("failed to start server")
